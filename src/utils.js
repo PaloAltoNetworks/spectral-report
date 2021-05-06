@@ -17,7 +17,8 @@ const filterJson = (obj) => {
     let filteredObj = [];
     obj.forEach(o => {
         let newObj = {};
-        newObj.line = o.range.start.line + ":" + o.range.start.character;
+        newObj.line = (o.range.start.line + 1) + ":" + (o.range.start.character + 1);
+        newObj.severity = o.severity;
         newObj.code = o.code;
         newObj.message = o.message;
         newObj.path = o.path.join(".");
