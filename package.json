@@ -4,7 +4,8 @@
   "description": "Generates report for the spectral linter output",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node src/index.js"
   },
   "keywords": [
     "spectral",
@@ -12,5 +13,10 @@
     "reports"
   ],
   "author": "ahemanna",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@stoplight/spectral": "^5.9.1",
+    "commander": "^7.2.0",
+    "handlebars": "^4.7.7"
+  }
 }
