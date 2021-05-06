@@ -1,7 +1,7 @@
 const { Command, Option } = require("commander");
 const { version } = require("../package.json");
 const { exists } = require("./utils");
-const { linter } = require("./linter");
+const { lint } = require("./linter");
 const { json, html, csv } = require("./report");
 
 const program = new Command();
@@ -33,12 +33,12 @@ if (ruleset && !exists(ruleset)) {
 
 switch (format) {
     case "html":
-        linter(spec, ruleset, name, html);
+        lint(spec, ruleset, name, html);
         break;
     case "csv":
-        linter(spec, ruleset, name, csv);
+        lint(spec, ruleset, name, csv);
         break;
     default:
-        linter(spec, ruleset, name, json);
+        lint(spec, ruleset, name, json);
         break;
 }

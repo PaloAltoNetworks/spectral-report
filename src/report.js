@@ -9,8 +9,11 @@ const html = (messages, filename) => {
     console.log("html report coming soon");
 }
 const csv = (messages, filename) => {
-    // writeToFile(data, filename + ".csv");
-    console.log("csv report coming soon");
+    let data = "line,code,message,path\n";
+    messages.forEach(o => {
+        data += o.line + "," + o.code + "," + o.message + "," + o.path + "\n";
+    });
+    writeToFile(data, filename + ".csv");
 }
 
 module.exports = {

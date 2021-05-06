@@ -12,8 +12,24 @@ const loadFile = (filepath) => {
 const writeToFile = (data, filename) => {
     fs.writeFileSync(path.join(filename), data, { encoding: "utf8" });
 }
+
+const filterJson = (obj) => {
+    let filteredObj = [];
+    obj.forEach(o => {
+        let newObj = {};
+        newObj.line = o.range.start.line + ":" + o.range.start.character;
+        newObj.code = o.code;
+        newObj.message = o.message;
+        newObj.path = o.path.join(".");
+
+        filteredObj.push(newObj);
+    });
+    return filteredObj;
+}
+
 module.exports = {
     exists,
     loadFile,
-    writeToFile
+    writeToFile,
+    filterJson
 };
