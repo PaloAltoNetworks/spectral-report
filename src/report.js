@@ -1,5 +1,3 @@
-const Handlebars = require("handlebars");
-const path = require("path");
 const { loadFile, writeToFile } = require("./utils");
 
 const json = (messages, filename) => {
@@ -9,6 +7,23 @@ const json = (messages, filename) => {
 }
 
 const html = (messages, filename) => {
+    const Handlebars = require("handlebars");
+    const path = require("path");
+    const _ = require("underscore");
+
+    let templateObj = {
+        "messages": messages,
+        "timestamp": new Date().toLocaleString()
+    };
+
+    let severityDist = _.countBy(messages, "severity");
+
+    templateObj.messageCount = messages.length;
+    templateObj.errorCount = severityDist.error || 0;
+    templateObj.warnCount = severityDist.warn || 0;
+    templateObj.infoCount = severityDist.info || 0;
+    templateObj.hintCount = severityDist.hint || 0;
+
     let htmlStr = loadFile(path.join(__dirname, "/templates/template.html"));
 
     // https://stackoverflow.com/a/22103990
@@ -17,7 +32,7 @@ const html = (messages, filename) => {
     });
 
     let template = Handlebars.compile(htmlStr);
-    let data = template(messages);
+    let data = template(templateObj);
 
     writeToFile(data, filename + ".html");
 }
