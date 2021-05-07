@@ -13,12 +13,28 @@ const writeToFile = (data, filename) => {
     fs.writeFileSync(path.join(filename), data, { encoding: "utf8" });
 }
 
+const getSeverityMap = () => {
+    // https://github.com/stoplightio/spectral/issues/1605#issuecomment-833868820
+    const { DiagnosticSeverity } = require("@stoplight/types");
+
+    const severityMap = {};
+
+    severityMap[DiagnosticSeverity.Error] = "error";
+    severityMap[DiagnosticSeverity.Warning] = "warn";
+    severityMap[DiagnosticSeverity.Information] = "info";
+    severityMap[DiagnosticSeverity.Hint] = "hint";
+
+    return severityMap;
+}
+
 const filterJson = (obj) => {
+    const severityMap = getSeverityMap();
+
     let filteredObj = [];
     obj.forEach(o => {
         let newObj = {};
         newObj.line = (o.range.start.line + 1) + ":" + (o.range.start.character + 1);
-        newObj.severity = o.severity;
+        newObj.severity = severityMap[o.severity];
         newObj.code = o.code;
         newObj.message = o.message;
         newObj.path = o.path.join(".");

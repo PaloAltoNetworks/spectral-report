@@ -8,31 +8,92 @@
 </head>
 
 <body>
+    <main class="container border-bottom">
+        <div class="container">
+            <h1 class="display-4">Spectral Linter Report</h1>
+        </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Sl. No</th>
-                <th scope="col">Line</th>
-                <th scope="col">Severity</th>
-                <th scope="col">Code</th>
-                <th scope="col">Message</th>
-                <th scope="col">Path</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each this}}
-            <tr>
-                <th scope="row">{{inc @index}}</th>
-                <td>{{line}}</td>
-                <td>{{severity}}</td>
-                <td>{{code}}</td>
-                <td>{{message}}</td>
-                <td>{{path}}</td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
+        <div class="container">
+            <hr />
+        </div>
+
+        <div class="container">
+            <h3>Summary</h3>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">Severity</th>
+                        <th scope="col">Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-danger">
+                        <th scope="row">Errors</th>
+                        <td>{{this.errorCount}}</td>
+                    </tr>
+                    <tr class="table-warning">
+                        <th scope="row">Warnings</th>
+                        <td>{{this.warnCount}}</td>
+                    </tr>
+                    <tr class="table-info">
+                        <th scope="row">Info</th>
+                        <td>{{this.infoCount}}</td>
+                    </tr>
+                    <tr class="table-light">
+                        <th scope="row">Hints</th>
+                        <td>{{this.hintCount}}</td>
+                    </tr>
+                    <tr class="table-active">
+                        <th scope="row">Total</th>
+                        <td>{{this.messageCount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container">
+            <h3>Detailed report</h3>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Line</th>
+                        <th scope="col">Severity</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">Path</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each this.messages}}
+                    <tr>
+                        <td>{{inc @index}}</th>
+                        <td>{{line}}</td>
+                        <td>{{severity}}</td>
+                        <td>{{code}}</td>
+                        <td>{{message}}</td>
+                        <td>{{path}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-left">
+                <span class="text-muted">Generated using <a href="#" style="text-decoration: none;">spectral-report</a>
+                    on {{timestamp}}.</span>
+            </p>
+        </div>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
