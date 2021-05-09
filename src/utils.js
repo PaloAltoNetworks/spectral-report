@@ -27,7 +27,7 @@ const getSeverityMap = () => {
     return severityMap;
 }
 
-const filterJson = (obj) => {
+const formatJSON = (obj) => {
     const severityMap = getSeverityMap();
 
     let filteredObj = [];
@@ -48,5 +48,5 @@ module.exports = {
     exists,
     loadFile,
     writeToFile,
-    filterJson
+    formatJSON
 };
