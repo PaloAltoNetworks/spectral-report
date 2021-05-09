@@ -1,6 +1,6 @@
-const { exists, formatJSON } = require("./utils");
+const { fileExists, formatJSON } = require("./utils");
 const { lint } = require("./linter");
-const { json, html, csv } = require("./report");
+const { generateReport } = require("./report");
 
 exports.main = ({
     specPath,
@@ -8,20 +8,17 @@ exports.main = ({
     reportName,
     reportFormat }) => {
 
-    if (!exists(specPath)) {
+    if (!fileExists(specPath)) {
         throw Error(`Unable to resolve ${specPath}`);
     };
 
-    if (rulesetPath && !exists(rulesetPath)) {
+    if (rulesetPath && !fileExists(rulesetPath)) {
         throw Error(`Unable to resolve ${rulesetPath}`);
     };
 
-    const report = reportFormat === "html" ? html : reportFormat === "csv" ? csv : json;
-
     lint(specPath, rulesetPath).then(
         results => {
-            results = formatJSON(results);
-            report(results, reportName);
+            generateReport(formatJSON(results), reportName, reportFormat);
         }
     );
 }

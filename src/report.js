@@ -1,28 +1,29 @@
 const { loadFile, writeToFile } = require("./utils");
 
-const json = (messages, filename) => {
+const generateJSONReport = (messages, filename) => {
     let data = JSON.stringify(messages, null, 4);
 
     writeToFile(data, filename + ".json");
 }
 
-const html = (messages, filename) => {
+const generateHTMLReport = (messages, filename) => {
     const Handlebars = require("handlebars");
+
     const path = require("path");
     const _ = require("underscore");
 
-    let templateObj = {
+    let jsonObj = {
         "messages": messages,
         "timestamp": new Date().toLocaleString()
     };
 
     let severityDist = _.countBy(messages, "severity");
 
-    templateObj.messageCount = messages.length;
-    templateObj.errorCount = severityDist.error || 0;
-    templateObj.warnCount = severityDist.warn || 0;
-    templateObj.infoCount = severityDist.info || 0;
-    templateObj.hintCount = severityDist.hint || 0;
+    jsonObj.messageCount = messages.length;
+    jsonObj.errorCount = severityDist.error || 0;
+    jsonObj.warnCount = severityDist.warn || 0;
+    jsonObj.infoCount = severityDist.info || 0;
+    jsonObj.hintCount = severityDist.hint || 0;
 
     let htmlStr = loadFile(path.join(__dirname, "/templates/template.html"));
 
@@ -32,12 +33,12 @@ const html = (messages, filename) => {
     });
 
     let template = Handlebars.compile(htmlStr);
-    let data = template(templateObj);
+    let data = template(jsonObj);
 
     writeToFile(data, filename + ".html");
 }
 
-const csv = (messages, filename) => {
+const generateCSVReport = (messages, filename) => {
     let data = "line,severity,code,message,path\n";
 
     messages.forEach(o => {
@@ -47,8 +48,16 @@ const csv = (messages, filename) => {
     writeToFile(data, filename + ".csv");
 }
 
-module.exports = {
-    json,
-    html,
-    csv
+exports.generateReport = (messages, filename, format) => {
+    switch (format.toLowerCase()) {
+        case "html":
+            generateHTMLReport(messages, filename);
+            break;
+        case "csv":
+            generateCSVReport(messages, filename);
+            break;
+        default:
+            generateJSONReport(messages, filename);
+            break;
+    }
 }

@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 
-const exists = (filepath) => {
+const fileExists = (filepath) => {
     return fs.existsSync(path.join(filepath));
 }
 
@@ -45,7 +45,7 @@ const formatJSON = (obj) => {
 }
 
 module.exports = {
-    exists,
+    fileExists,
     loadFile,
     writeToFile,
     formatJSON
