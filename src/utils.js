@@ -1,3 +1,4 @@
+const { DiagnosticSeverity } = require("@stoplight/types");
 const path = require("path");
 const fs = require("fs");
 
@@ -15,7 +16,6 @@ const writeToFile = (data, filename) => {
 
 const getSeverityMap = () => {
     // https://github.com/stoplightio/spectral/issues/1605#issuecomment-833868820
-    const { DiagnosticSeverity } = require("@stoplight/types");
 
     const severityMap = {};
 
