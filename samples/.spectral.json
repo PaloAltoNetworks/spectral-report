@@ -1,0 +1,26 @@
+{
+    "extends": [
+        "spectral:oas"
+    ],
+    "functions": [
+        "rule1"
+    ],
+    "rules": {
+        "rule1": {
+            "description": "",
+            "message": "",
+            "recommended": true,
+            "severity": "warn",
+            "resolved": false,
+            "formats": [
+                "oas2",
+                "oas3"
+            ],
+            "type": "validation",
+            "given": "$.",
+            "then": {
+                "function": "rule1"
+            }
+        }
+    }
+}
