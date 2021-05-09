@@ -1,4 +1,7 @@
 const { loadFile, writeToFile } = require("./utils");
+const Handlebars = require("handlebars");
+const path = require("path");
+const _ = require("underscore");
 
 const generateJSONReport = (messages, filename) => {
     let data = JSON.stringify(messages, null, 4);
@@ -7,11 +10,6 @@ const generateJSONReport = (messages, filename) => {
 }
 
 const generateHTMLReport = (messages, filename) => {
-    const Handlebars = require("handlebars");
-
-    const path = require("path");
-    const _ = require("underscore");
-
     let jsonObj = {
         "messages": messages,
         "timestamp": new Date().toLocaleString()
