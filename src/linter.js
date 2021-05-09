@@ -1,8 +1,8 @@
 const path = require("path");
-const { loadFile, filterJson } = require("./utils");
+const { loadFile } = require("./utils");
 const { Spectral, isOpenApiv2, isOpenApiv3 } = require("@stoplight/spectral");
 
-const lint = (specPath, rulesPath, filename, callback) => {
+exports.lint = (specPath, rulesPath) => {
     const spectral = new Spectral();
 
     spectral.registerFormat("oas2", isOpenApiv2);
@@ -11,15 +11,6 @@ const lint = (specPath, rulesPath, filename, callback) => {
     let spec = loadFile(specPath);
     let ruleset = rulesPath ? path.join(rulesPath) : "spectral:oas";
 
-    spectral.loadRuleset(ruleset)
-        .then(() => spectral.run(spec))
-        .then((results) => {
-            results = filterJson(results);
-            callback(results, filename);
-        });
+    return (spectral.loadRuleset(ruleset)
+        .then(() => spectral.run(spec)));
 }
-
-module.exports = {
-    lint
-}
-

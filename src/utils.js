@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 
-const exists = (filepath) => {
+const fileExists = (filepath) => {
     return fs.existsSync(path.join(filepath));
 }
 
@@ -27,7 +27,7 @@ const getSeverityMap = () => {
     return severityMap;
 }
 
-const filterJson = (obj) => {
+const formatJSON = (obj) => {
     const severityMap = getSeverityMap();
 
     let filteredObj = [];
@@ -45,8 +45,8 @@ const filterJson = (obj) => {
 }
 
 module.exports = {
-    exists,
+    fileExists,
     loadFile,
     writeToFile,
-    filterJson
+    formatJSON
 };

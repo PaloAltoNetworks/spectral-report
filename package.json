@@ -4,21 +4,25 @@
   "description": "Generates report for the spectral linter output",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "node src/index.js"
   },
   "keywords": [
+    "stoplight",
     "spectral",
     "linter",
     "reports"
   ],
   "author": "ahemanna",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@stoplight/spectral": "^5.9.1",
     "@stoplight/types": "^11.10.0",
     "commander": "^7.2.0",
     "handlebars": "^4.7.7",
     "underscore": "^1.13.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
   }
 }
