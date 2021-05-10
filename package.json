@@ -26,7 +26,8 @@
   "files": [
     "lib/",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "package.json"
   ],
   "license": "MIT",
   "dependencies": {
