@@ -1,4 +1,4 @@
-const { fileExists, loadFile, writeToFile, filterJson, formatJSON } = require("../src/utils");
+const { fileExists, loadFile, writeToFile, filterJson, formatJSON } = require("../lib/utils");
 const fs = require("fs");
 
 describe("Utils", () => {
