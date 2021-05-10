@@ -1,7 +1,7 @@
-const { generateReport } = require("../src/report");
-const { loadFile, writeToFile } = require("../src/utils");
+const { generateReport } = require("../lib/report");
+const { loadFile, writeToFile } = require("../lib/utils");
 
-jest.mock("../src/utils.js", () => {
+jest.mock("../lib/utils.js", () => {
     return {
         loadFile: jest.fn((path) => {
             return "";

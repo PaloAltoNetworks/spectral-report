@@ -2,11 +2,11 @@
   "name": "spectral-report",
   "version": "1.0.0",
   "description": "Generates report for the spectral linter output",
-  "main": "./src/index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
-    "dev": "node src/index.js"
+    "dev": "node lib/index.js"
   },
   "keywords": [
     "stoplight",
@@ -23,6 +23,11 @@
   "bugs": {
     "url": "https://github.com/ahemanna/spectral-report/issues"
   },
+  "files": [
+    "lib/",
+    "LICENSE",
+    "README.md"
+  ],
   "license": "MIT",
   "dependencies": {
     "@stoplight/spectral": "^5.9.1",

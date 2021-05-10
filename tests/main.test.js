@@ -1,4 +1,4 @@
-const { main } = require("../src/main");
+const { main } = require("../lib/main");
 
 describe("main", () => {
     it("main()", () => {

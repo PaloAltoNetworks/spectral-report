@@ -1,4 +1,4 @@
-const { lint } = require("../src/linter");
+const { lint } = require("../lib/linter");
 
 describe("linter", () => {
     it("lint()", () => {
