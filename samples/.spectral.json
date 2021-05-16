@@ -2,24 +2,23 @@
     "extends": [
         "spectral:oas"
     ],
-    "functions": [
-        "rule1"
-    ],
+    "functions": [],
     "rules": {
-        "rule1": {
-            "description": "",
-            "message": "",
+        "api-name-check": {
+            "description": "api-name-check",
+            "message": "Missing x-api-name",
             "recommended": true,
-            "severity": "warn",
+            "severity": "error",
             "resolved": false,
             "formats": [
                 "oas2",
                 "oas3"
             ],
             "type": "validation",
-            "given": "$.",
+            "given": "$.info.*",
             "then": {
-                "function": "rule1"
+                "field": "x-api-name",
+                "function": "defined"
             }
         }
     }

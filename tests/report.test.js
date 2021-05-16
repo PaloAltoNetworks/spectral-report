@@ -21,6 +21,39 @@ const messages = [
     }
 ];
 
+const messages1 = [
+    {
+        "line": "1:1",
+        "severity": "warn",
+        "code": "openapi-tags",
+        "message": "OpenAPI object should have non-empty `tags` array.",
+        "path": ""
+    },
+    {
+        "line": "3:12",
+        "severity": "error",
+        "code": "info-contact",
+        "message": "Info object should contain `contact` object.",
+        "path": "info"
+    },
+    {
+        "line": "1:12",
+        "severity": "info",
+        "code": "info-description",
+        "message": "OpenAPI object info `description` must be present and non-empty string.",
+        "path": "info"
+    },
+    {
+        "line": "17:19",
+        "severity": "hint",
+        "code": "operation-description",
+        "message": "Operation `description` must be present and non-empty string.",
+        "path": "paths./pets.get"
+    }
+];
+
+const messages2 = [];
+
 afterEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -34,21 +67,46 @@ describe("report", () => {
         expect(writeToFile).toBeCalledWith(JSON.stringify(messages, null, 4), "report.json");
     });
 
-    it("generateHTMLReport()", () => {
+    it("generateHTMLReport() - no messages reported", () => {
         const Handlebars = require("handlebars");
 
         let spyRegisterHelper = jest.spyOn(Handlebars, "registerHelper");
         let spyCompile = jest.spyOn(Handlebars, "compile");
 
         spyRegisterHelper.mockImplementation((name, callback) => {
-            callback;
+            callback();
         });
 
         spyCompile.mockImplementation((str) => {
             return (str) => { return "" };
         });
 
-        generateReport(messages, "report", "html");
+        generateReport(messages1, "report", "html");
+
+        expect(spyRegisterHelper).toHaveBeenCalled();
+        expect(spyCompile).toHaveBeenCalled();
+        expect(loadFile).toHaveBeenCalled();
+        expect(writeToFile).toHaveBeenCalled();
+        expect(writeToFile).toBeCalledWith("", "report.html");
+
+    });
+
+    it("generateHTMLReport() - at least one message of each severity reported", () => {
+        const Handlebars = require("handlebars");
+
+        let spyRegisterHelper = jest.spyOn(Handlebars, "registerHelper");
+        let spyCompile = jest.spyOn(Handlebars, "compile");
+
+        spyRegisterHelper.mockImplementation((name, callback) => {
+            callback();
+        });
+
+        spyCompile.mockImplementation((str) => {
+            return (str) => { return "" };
+        });
+
+        // Cover all branches of severity
+        generateReport(messages2, "report", "html");
 
         expect(spyRegisterHelper).toHaveBeenCalled();
         expect(spyCompile).toHaveBeenCalled();
