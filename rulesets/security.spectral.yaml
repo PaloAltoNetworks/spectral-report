@@ -1,0 +1,2 @@
+extends: ["owasp.ruleset.js"]
+

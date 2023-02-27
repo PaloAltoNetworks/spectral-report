@@ -1,6 +1,6 @@
 {
-  "name": "spectral-report",
-  "version": "1.0.3",
+  "name": "@paloaltonetworks/spectral-report",
+  "version": "2.0.0-alpha0",
   "description": "Generates report for the spectral linter output",
   "main": "./lib/index.js",
   "bin": {
@@ -10,7 +10,8 @@
   "scripts": {
     "test": "jest",
     "coverage": "jest --coverage",
-    "dev": "node lib/index.js"
+    "dev": "node lib/index.js",
+    "gen-report": "spectral-report -s openapi-specs/iot/iot.yaml -f html -r rulesets/ruleset.js"
   },
   "keywords": [
     "stoplight",
@@ -37,11 +38,16 @@
   "license": "MIT",
   "dependencies": {
     "@stoplight/spectral": "^6.5.0",
+    "@stoplight/spectral-formats": "^1.5.0",
+    "@stoplight/spectral-functions": "^1.7.2",
+    "@stoplight/spectral-owasp-ruleset": "^1.4.0",
+    "@stoplight/spectral-ruleset-bundler": "^1.5.1",
     "@stoplight/types": "^13.9.1",
-    "commander": "^10.0.0",
+    "commander": "^7.2.0",
     "handlebars": "^4.7.7",
+    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "underscore": "^1.13.6"
+    "underscore": "^1.13.1"
   },
   "devDependencies": {
     "jest": "^26.6.3"

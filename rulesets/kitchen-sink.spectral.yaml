@@ -1,0 +1,1 @@
+extends: ["owasp.ruleset.js", "js-ruleset.js", "spectral:oas", "spectral:asyncapi"]

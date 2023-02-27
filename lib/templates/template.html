@@ -5,18 +5,22 @@
     <title>Palo Alto Networks | Spectral Report</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="custom.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css"/>
+    <link href="https://cdn.datatables.net/v/bs5/jqc-1.12.4/dt-1.13.2/rg-1.3.0/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" integrity="sha512-YFENbnqHbCRmJt5d+9lHimyEMt8LKSNTMLSaHjvsclnZGICeY/0KYEeiHwD1Ux4Tcao0h60tdcMv+0GljvWyHg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <style>
     .report__heading {
+       margin-top: 2rem;
+       margin-bottom: 2rem;
        text-align: center;
     }
 
     .report__card-container {
         color: #fff;
+        margin-top: 2rem;
     }
 
     .report__card {
@@ -43,97 +47,425 @@
         margin-bottom: 1rem;
     }
 
+    .report__filter-buttons {
+        display: flex;
+        flex-direction: row;
+        margin-top: 1rem;
+        margin-left: .1rem;
+    }
+
+    .report__button {
+        width: 100px;
+        margin-right: 1rem;
+    }
+
+    .report__search {
+        width: 300px;
+        display: inline-block;
+    }
+
+    .report__snippet {
+        overflow-x: auto;
+    }
+
+    .report__group-col {
+        background: #323 !important;
+    }
+
     .dataTables_filter {
         padding-right: 1rem;
     }
 
+    .btn-info.active {
+        box-shadow: 0 0 10px rgba(97, 196, 255);
+    }
+
+    .btn-danger.active {
+        box-shadow: 0 0 10px rgba(247, 58, 255);
+    }
+
+    .btn-warning.active {
+        box-shadow: 0 0 10px #ffc107;
+    }
+
+    .footer {
+        margin-top: 2rem;
+    }
+
+    .report__message {
+        white-space: pre-wrap; /* css-3 */
+        word-wrap: break-word;
+        width: 100px;
+    }
+
+    .report__code--highlight {
+        color: rgba(247, 58, 255) !important;
+    }
+  
+    /* LineNumbers */
+    .chroma .ln {
+        padding: 0 0.5rem 0 0.5rem;
+        color: #7f7f7f;
+        position: fixed;
+        z-index: 100;
+        background-color: #0d1117;
+    }
+
+    .code {
+        margin-left: 4rem;
+    }
+
+    .btn-danger {
+        background-color: rgba(247, 58, 255, var(--bs-bg-opacity)) !important;
+        border-color: rgba(247, 58, 255, var(--bs-bg-opacity)) !important;
+        --bs-btn-border-color: rgba(247, 58, 255, var(--bs-bg-opacity)) !important;
+    }
+
+    .btn-info {
+        background-color: rgba(97, 196, 255, var(--bs-bg-opacity))!important;
+        border-color: rgba(97, 196, 255, var(--bs-bg-opacity)) !important;
+        --bs-btn-border-color: rgba(97, 196, 255, var(--bs-bg-opacity)) !important;
+    }
+
+    .collapsed {
+        position: sticky;
+        top: 0;
+    }
+
+    .dtrg-group {
+        cursor: pointer;
+    }
+
+    :root {
+        --bs-bg-opacity: 1;
+        --bs-body-bg: #0d1117;
+        --bs-danger-rgb: 247, 58, 255;
+        --bs-info-rgb: 97, 196, 255;
+        --bs-body-font-family: Menlo, Monaco, Roboto Mono, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif !important;
+        --bs-body-font-size: 90%;
+    }
  </style>
 
 <body>
     <main class="container border-bottom">
         <div class="container">
-            <h1 class="display-4 report__heading">OpenAPI Static Analysis Report</h1>
+            <h1 class="display-4 report__heading">OpenAPI Spectral Linter Report</h1>
         </div>
 
         <div class="container">
             <hr />
         </div>
 
-        <div class="container report__card-container">
-            <div class="row">
-                <div class="col report__card-col">
-                    <div class="card bg-danger report__card">
-                        <i class="bi-bug report__card-icon"></i>
-                        <div class="card-body">
-                            <h1 class="card-title">Errors</h1>
-                            <h2 class="card-title">{{this.errorCount}}</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col report__card-col">
-                    <div class="card bg-warning report__card">
-                        <i class="bi-cone-striped report__card-icon"></i>
-                        <div class="card-body">
-                            <h1 class="card-title">Warnings</h1>
-                            <h2 class="card-title">{{this.warnCount}}</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col report__card-col">
-                    <div class="card bg-info report__card">
-                        <i class="bi-info-circle report__card-icon"></i>
-                        <div class="card-body">
-                            <h1 class="card-title">Info</h1>
-                            <h2 class="card-title">{{this.infoCount}}</h2>
-                        </div>
-                    </div>
-                </div>  
-                <div class="col report__card-col">
-                    <div class="card bg-light report__card report__card-font-light" >
-                        <i class="bi-question-circle report__card-icon"></i>
-                        <div class="card-body">
-                            <h1 class="card-title">Hints</h1>
-                            <h2 class="card-title">{{this.hintCount}}</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>  
-        </div>
-
         <div class="container report__table-container">
-            <div class="table-responsive-md">
-                <table id="detailed-report" class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Line</th>
-                            <th scope="col">Severity</th>
-                            <th scope="col">Code</th>
-                            <th scope="col">Message</th>
-                            <th scope="col">Path</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each this.messages}}
-                        <tr>
-                            <td>{{inc @index}}</th>
-                            <td>{{line}}</td>
-                            {{#ifEquals severity "warn"}}
-                            <td><span class="badge bg-warning">{{severity}}</span></td>
-                            {{else ifEquals severity "error"}}
-                            <td><span class="badge bg-danger">{{severity}}</span></td>
-                            {{else ifEquals severity "info"}}
-                            <td><span class="badge bg-info">{{severity}}</span></td>
-                            {{else}}
-                            <td><span class="badge bg-primary">{{severity}}</span></td>
-                            {{/ifEquals}}
-                            <td>{{code}}</td>
-                            <td>{{message}}</td>
-                            <td>{{path}}</td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="default-tab" href="#default-pane" data-bs-toggle="tab" >Default</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="owasp-tab" href="#owasp-pane" data-bs-toggle="tab">OWASP Top 10</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="default-pane">
+                    <div class="container report__card-container">
+                        <div class="row">
+                            <div class="col report__card-col">
+                                <div class="card bg-danger report__card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="bi-bug report__card-icon"></i>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row"><h2 class="card-title">Errors</h2></div>
+                                                <div class="row"><h3 class="card-title">{{this.errorCount}}</h3></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col report__card-col">
+                                <div class="card bg-warning report__card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="bi-cone-striped report__card-icon"></i>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row"><h2 class="card-title">Warnings</h2></div>
+                                                <div class="row"><h3 class="card-title">{{this.warnCount}}</h3></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col report__card-col">
+                                <div class="card bg-info report__card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="bi-info-circle report__card-icon"></i>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row"><h2 class="card-title">Info</h2></div>
+                                                <div class="row"><h3 class="card-title">{{this.infoCount}}</h3></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="col report__card-col">
+                                <div class="card bg-light report__card report__card-font-light">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="bi-question-circle report__card-icon"></i>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row"><h2 class="card-title">Hints</h3></div>
+                                                <div class="row"><h2 class="card-title">{{this.hintCount}}</h3></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div> 
+                        <div class="row report__filter-buttons">
+                            <a data-bs-toggle="button" id="errorFilter" class="btn btn-danger report__button">Error</a>
+                            <a data-bs-toggle="button" id="warningFilter" class="btn btn-warning report__button">Warning</a>
+                            <a data-bs-toggle="button" id="infoFilter" class="btn btn-info report__button">Info</a>
+                            <a data-bs-toggle="button" id="clearFilter" class="btn btn-light report__button"><span><i class="bi bi-x"></i>Reset</span></a>
+                        </div> 
+                    </div>
+
+                    <div class="container">
+                        <hr />
+                    </div>
+
+                    <div class="table-responsive-md">
+                        <table id="detailed-report" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Line</th>
+                                    <th scope="col">Severity</th>
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Message</th>
+                                    <th scope="col">Path</th>
+                                    <th scope="col">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each this.messages}}
+                                <tr>
+                                    <td>{{inc @index}}</th>
+                                    <td>{{type}}</th>
+                                    <td>{{line}}</td>
+                                    {{#ifEquals severity "warn"}}
+                                    <td><span class="badge bg-warning">{{severity}}</span></td>
+                                    {{else ifEquals severity "error"}}
+                                    <td><span class="badge bg-danger">{{severity}}</span></td>
+                                    {{else ifEquals severity "info"}}
+                                    <td><span class="badge bg-info">{{severity}}</span></td>
+                                    {{else}}
+                                    <td><span class="badge bg-primary">{{severity}}</span></td>
+                                    {{/ifEquals}}
+                                    <td>{{code}}</td>
+                                    <td class="report__message">{{message}}</td>
+                                    <td>{{path}}</td>
+                                    <td>
+                                        <a
+                                          data-bs-target="#{{inc @index}}-modal"
+                                          data-bs-toggle="modal"
+                                          role="button"
+                                          aria-pressed="true"
+                                        >
+                                          <i class="bi-search"></i>
+                                        </a>
+                                        <div class="modal modal-lg fade" id="{{inc @index}}-modal">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">
+                                                    CONTEXT
+                                                    </h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div><p>{{message}}</p></div>
+                                                    <hr/>
+                                                    <pre tabindex="0" class="chroma">
+                                                        {{#each this.snippets}}
+<code class="{{class}}"><span class="ln {{class}}">{{line}}</span><span class="code">{{code}}</span></code>
+                                                        {{/each}}
+                                                    </pre>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                                    Close
+                                                    </button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane" id="owasp-pane">
+                    <div class="container report__card-container">
+                        <div class="row">
+                            <div class="col report__card-col">
+                                <div class="card bg-danger report__card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="bi-bug report__card-icon"></i>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row"><h2 class="card-title">Errors</h2></div>
+                                                <div class="row"><h3 class="card-title">{{this.owaspErrorCount}}</h3></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col report__card-col">
+                                <div class="card bg-warning report__card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="bi-cone-striped report__card-icon"></i>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row"><h2 class="card-title">Warnings</h2></div>
+                                                <div class="row"><h3 class="card-title">{{this.owaspWarnCount}}</h3></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col report__card-col">
+                                <div class="card bg-info report__card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="bi-info-circle report__card-icon"></i>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row"><h2 class="card-title">Info</h2></div>
+                                                <div class="row"><h3 class="card-title">{{this.owapInfoCount}}</h3></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="col report__card-col">
+                                <div class="card bg-light report__card report__card-font-light">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="bi-question-circle report__card-icon"></i>
+                                            </div>
+                                            <div class="col">
+                                                <div class="row"><h2 class="card-title">Hints</h3></div>
+                                                <div class="row"><h2 class="card-title">{{this.owapHintCount}}</h3></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div> 
+                        <div class="row report__filter-buttons">
+                            <a data-bs-toggle="button" id="owaspErrorFilter" class="btn btn-danger report__button">Error</a>
+                            <a data-bs-toggle="button" id="owaspWarningFilter" class="btn btn-warning report__button">Warning</a>
+                            <a data-bs-toggle="button" id="owaspInfoFilter" class="btn btn-info report__button">Info</a>
+                            <a data-bs-toggle="button" id="owaspClearFilter" class="btn btn-light report__button"><span><i class="bi bi-x"></i>Reset</span></a>
+                        </div> 
+                    </div>
+
+                    <div class="container">
+                        <hr />
+                    </div>
+
+                    <div class="table-responsive-md">
+                        <table id="owasp-report" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Line</th>
+                                    <th scope="col">Severity</th>
+                                    <th scope="col">Code</th>
+                                    <th scope="col">Message</th>
+                                    <th scope="col">Path</th>
+                                    <th scope="col">Detail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each this.messages}}
+                                    {{#ifEquals type "OWASP"}}
+                                    <tr>
+                                        <td>{{inc @index}}</th>
+                                        <td>{{type}}</td>
+                                        <td>{{line}}</td>
+                                        {{#ifEquals severity "warn"}}
+                                        <td><span class="badge bg-warning">{{severity}}</span></td>
+                                        {{else ifEquals severity "error"}}
+                                        <td><span class="badge bg-danger">{{severity}}</span></td>
+                                        {{else ifEquals severity "info"}}
+                                        <td><span class="badge bg-info">{{severity}}</span></td>
+                                        {{else}}
+                                        <td><span class="badge bg-primary">{{severity}}</span></td>
+                                        {{/ifEquals}}
+                                        <td>{{code}}</td>
+                                        <td class="report__message">{{message}}</td>
+                                        <td>{{path}}</td>
+                                        <td>
+                                            <a
+                                              data-bs-target="#{{inc @index}}-modal-owasp"
+                                              data-bs-toggle="modal"
+                                              role="button"
+                                              aria-pressed="true"
+                                            >
+                                              <i class="bi-search"></i>
+                                            </a>
+                                            <div class="modal modal-lg fade" id="{{inc @index}}-modal-owasp">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">
+                                                        CONTEXT
+                                                        </h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div><p>{{message}}</p></div>
+                                                        <hr/>
+                                                        <pre tabindex="0" class="chroma">
+                                                            {{#each this.snippets}}
+    <code class="{{class}}"><span class="ln {{class}}">{{line}}</span><span class="code">{{code}}</span></code>
+                                                            {{/each}}
+                                                        </pre>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                                        Close
+                                                        </button>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {{/ifEquals}}
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -143,7 +475,8 @@
             <p class="text-left">
                 <span class="text-muted">Generated using <a href="https://www.npmjs.com/package/spectral-report"
                         style="text-decoration: none;">spectral-report</a>
-                    on {{timestamp}}.</span>
+                    on {{timestamp}}.
+                </span>
             </p>
         </div>
     </footer>
@@ -151,17 +484,189 @@
     <script src="https://code.jquery.com/jquery-3.6.3.slim.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/v/bs5/jqc-1.12.4/dt-1.13.2/rg-1.3.0/datatables.min.js"></script>    
     <script>
-        $(document).ready(function () {
-            $('#detailed-report').DataTable({
+        var default_ = $(document).ready(function() {
+            var collapsedGroups = {};
+            var oTable = $('#detailed-report').DataTable({
                 paging: false,
-                scrollY: '500px',
-                order: [[0, 'asc']],
+                info: true,
+                scrollY: '550px',
+                autoWidth: false,
+                language: {
+                    search: ""
+                },
+                order: [
+                    [4, 'asc']
+                ],
+                rowGroup: {
+                    // Uses the 'row group' plugin
+                    dataSrc: "code",
+                    startRender: function(rows, group) {
+                        let collapsed = !!collapsedGroups[group];
+                        rows.nodes().each(function (r) {
+                            r.style.display = 'none';
+                            if (collapsed) {
+                                r.style.display = '';
+                            }
+                        })
+                        return $('<tr/>').append('<td colspan="8" class="report__group-col">' + group + ' (' + rows.count() + ')' + (collapsed ? ' <span><i class="bi-dash-square"></i></span>' : ' <span><i class="bi-plus-square"></i></span>') + '</td>').attr('data-name', group).toggleClass('collapsed', collapsed);
+                    }
+                },
+                columns: [
+                    {data:"id", title: "ID"},
+                    {data:"type", title: "TYPE"},
+                    {data:"line", title: "LINE"},
+                    {data:"severity", title: "SEVERITY"},
+                    {data:"code", title: "CODE"},
+                    {data:"message", title: "MESSAGE"},
+                    {data:"path", title: "PATH"},
+                    {data:"details", title: "DETAILS"},
+                ],
+            });
+
+            $('#detailed-report tbody').on('click', 'tr.dtrg-start', function() {
+                var name = $(this).data('name');
+                collapsedGroups[name] = !collapsedGroups[name];
+                for (const [key, value] of Object.entries(collapsedGroups)) {
+                    if (key !== name) {
+                        delete collapsedGroups[key]
+                    }
+                }
+                oTable.draw(false);
             });
         });
+        $('#errorFilter').on('click', function (e) {
+            e.preventDefault()
+            $('#warningFilter').removeClass("active")
+            $('#infoFilter').removeClass("active")
+            $('#clearFilter').removeClass("active")
+            var regex = "^" + "error" + "$";
+            $('#detailed-report').DataTable({retrieve: true}).column(3).search(regex, true, false, true).draw()
+        });
+        $('#warningFilter').on('click', function (e) {
+            e.preventDefault()
+            $('#errorFilter').removeClass("active")
+            $('#infoFilter').removeClass("active")
+            $('#clearFilter').removeClass("active")
+            var regex = "^" + "warn" + "$";
+            $('#detailed-report').DataTable({retrieve: true}).column(3).search(regex, true, false, true).draw()
+        });
+        $('#infoFilter').on('click', function (e) {
+            $('#warningFilter').removeClass("active")
+            $('#errorFilter').removeClass("active")
+            $('#clearFilter').removeClass("active")
+            e.preventDefault()
+            var regex = "^" + "info" + "$";
+            $('#detailed-report').DataTable({retrieve: true}).column(3).search(regex, true, false, true).draw()
+        });
+        $('#clearFilter').on('click', function (e) {
+            e.preventDefault()
+            $('#clearFilter').removeClass("active")
+            $('#warningFilter').removeClass("active")
+            $('#infoFilter').removeClass("active")
+            $('#errorFilter').removeClass("active")
+            var regex = "";
+            $('#detailed-report').DataTable({retrieve: true}).column(3).search(regex, true, false, true).draw()
+        });
     </script>
+    <script>
+        var owasp = $(document).ready(function() {
+            var collapsedGroups = {};
+            var oTable = $('#owasp-report').DataTable({
+                paging: false,
+                info: true,
+                scrollY: '550px',
+                autoWidth: false,
+                language: {
+                    search: ""
+                },
+                order: [
+                    [4, 'asc']
+                ],
+                rowGroup: {
+                    // Uses the 'row group' plugin
+                    dataSrc: "code",
+                    startRender: function(rows, group) {
+                        let collapsed = !!collapsedGroups[group];
+                        rows.nodes().each(function (r) {
+                            r.style.display = 'none';
+                            if (collapsed) {
+                                r.style.display = '';
+                            }
+                        })
+
+                        // Add category name to the <tr>. NOTE: Hardcoded colspan
+                        return $('<tr/>').append('<td colspan="8" class="report__group-col">' + group + ' (' + rows.count() + ')' + (collapsed ? ' <span><i class="bi-dash-square"></i></span>' : ' <span><i class="bi-plus-square"></i></span>') + '</td>').attr('data-name', group).toggleClass('collapsed', collapsed);
+                    }
+                },
+                columns: [
+                    {data:"id", title: "ID"},
+                    {data:"type", title: "TYPE"},
+                    {data:"line", title: "LINE"},
+                    {data:"severity", title: "SEVERITY"},
+                    {data:"code", title: "CODE"},
+                    {data:"message", title: "MESSAGE"},
+                    {data:"path", title: "PATH"},
+                    {data:"details", title: "DETAILS"},
+                ],
+            });
+
+            $('#owasp-report tbody').on('click', 'tr.dtrg-start', function() {
+                var name = $(this).data('name');
+                collapsedGroups[name] = !collapsedGroups[name];
+                for (const [key, value] of Object.entries(collapsedGroups)) {
+                    if (key !== name) {
+                        delete collapsedGroups[key]
+                    }
+                }
+                oTable.draw(false);
+            });
+        });
+        $('#owasp-tab').on('click', function (e) {
+            e.preventDefault()
+            $('#owasp-report').DataTable({retrieve: true}).columns.adjust()
+        });
+        $('#owaspErrorFilter').on('click', function (e) {
+            e.preventDefault()
+            $('#owaspWarningFilter').removeClass("active")
+            $('#owaspInfoFilter').removeClass("active")
+            $('#owaspClearFilter').removeClass("active")
+            var regex = "^" + "error" + "$";
+            $('#owasp-report').DataTable({retrieve: true}).column(3).search(regex, true, false, true).draw()
+        });
+        $('#owaspWarningFilter').on('click', function (e) {
+            e.preventDefault()
+            $('#owaspErrorFilter').removeClass("active")
+            $('#owaspInfoFilter').removeClass("active")
+            $('#owaspClearFilter').removeClass("active")
+            var regex = "^" + "warn" + "$";
+            $('#owasp-report').DataTable({retrieve: true}).column(3).search(regex, true, false, true).draw()
+        });
+        $('#owaspInfoFilter').on('click', function (e) {
+            e.preventDefault()
+            $('#owaspWarningFilter').removeClass("active")
+            $('#owaspErrorFilter').removeClass("active")
+            $('#owaspClearFilter').removeClass("active")
+            var regex = "^" + "info" + "$";
+            $('#owasp-report').DataTable({retrieve: true}).column(3).search(regex, true, false, true).draw()
+        });
+        $('#owaspClearFilter').on('click', function (e) {
+            e.preventDefault()
+            $('#owaspWarningFilter').removeClass("active")
+            $('#owaspInfoFilter').removeClass("active")
+            $('#owaspErrorFilter').removeClass("active")
+            $('#owaspClearFilter').removeClass("active")
+            var regex = "";
+            $('#owasp-report').DataTable({retrieve: true}).column(3).search(regex, true, false, true).draw()
+        });
+    </script>
+    <!-- <script>
+        $(document).ready(function () {             
+            $('.dataTables_filter input[type="search"]').addClass("report__search")
+        });
+    </script> -->
 </body>
 
 </html>
