@@ -9,7 +9,7 @@
 You can install `spectral-report` using npm:
 
 ```
-npm install -g spectral-report
+npm install -g @paloaltonetworks/spectral-report
 ```
 
 ## Usage
@@ -32,9 +32,8 @@ Options:
   -n, --reportName <report name>  report name (default: "spectral-report")
   -f, --reportFormat <format>     report format (choices: "json", "html", "csv", default: json)
   -h, --help                      display help for command
-  ```
+```
 
-  ## License
+## License
 
-  This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
-  
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
