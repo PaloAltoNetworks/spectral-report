@@ -43,6 +43,7 @@
     "@stoplight/spectral-owasp-ruleset": "^1.4.0",
     "@stoplight/spectral-ruleset-bundler": "^1.5.1",
     "@stoplight/types": "^13.9.1",
+    "chalk": "^4.1.2",
     "commander": "^7.2.0",
     "handlebars": "^4.7.7",
     "js-yaml": "^4.1.0",
