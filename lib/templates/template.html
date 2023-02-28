@@ -72,6 +72,17 @@
         background: #323 !important;
     }
 
+    .report__notice {
+        align-items: center;
+        display: flex;
+        vertical-align: middle;
+        font-size: 1rem;
+    }
+
+    .report__notice-icon {
+        margin-right: 1rem;
+    }
+
     .dataTables_filter {
         padding-right: 1rem;
     }
@@ -155,6 +166,12 @@
         <div class="container">
             <hr />
         </div>
+
+        {{#if this.truncated}}
+        <div class="alert alert-warning report__notice" role="alert">
+            <p><span><i class="bi bi-exclamation-circle report__notice-icon"></i></span>Results truncated to under 1,000 for optimal performance.</p>
+        </div>
+        {{/if}}
 
         <div class="container report__table-container">
             <ul class="nav nav-tabs" role="tablist">
@@ -357,7 +374,7 @@
                                             </div>
                                             <div class="col">
                                                 <div class="row"><h2 class="card-title">Info</h2></div>
-                                                <div class="row"><h3 class="card-title">{{this.owapInfoCount}}</h3></div>
+                                                <div class="row"><h3 class="card-title">{{this.owaspInfoCount}}</h3></div>
                                             </div>
                                         </div>
                                     </div>
@@ -372,7 +389,7 @@
                                             </div>
                                             <div class="col">
                                                 <div class="row"><h2 class="card-title">Hints</h3></div>
-                                                <div class="row"><h2 class="card-title">{{this.owapHintCount}}</h3></div>
+                                                <div class="row"><h2 class="card-title">{{this.owaspHintCount}}</h3></div>
                                             </div>
                                         </div>
                                     </div>
